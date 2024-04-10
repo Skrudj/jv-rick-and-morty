@@ -7,16 +7,13 @@ import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import mate.academy.rickandmorty.model.CartoonCharacter;
 import mate.academy.rickandmorty.repository.CartoonCharacterRepository;
-import mate.academy.rickandmorty.repository.SpecificationProvider;
 import mate.academy.rickandmorty.service.CartoonCharacterService;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class CartoonCharacterServiceImpl implements CartoonCharacterService {
     private final CartoonCharacterRepository characterRepository;
-    private final SpecificationProvider<CartoonCharacter> nameSpecificationProvider;
 
     @Override
     public CartoonCharacter getRandomCharacter() {
@@ -25,14 +22,6 @@ public class CartoonCharacterServiceImpl implements CartoonCharacterService {
         int randomIndex = random.nextInt(characters.size());
 
         return characters.get(randomIndex);
-    }
-
-    @Override
-    public List<CartoonCharacter> getByName(String name) {
-        Specification<CartoonCharacter> specification =
-                nameSpecificationProvider.getSpecification(name);
-
-        return characterRepository.findAll(specification);
     }
 
     @Override
@@ -46,8 +35,8 @@ public class CartoonCharacterServiceImpl implements CartoonCharacterService {
     }
 
     @Override
-    public List<CartoonCharacter> getAll() {
-        return characterRepository.findAll();
+    public List<CartoonCharacter> getAll(String name) {
+        return characterRepository.findByNameContainsIgnoreCase(name);
     }
 
     @Override

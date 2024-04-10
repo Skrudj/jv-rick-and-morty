@@ -6,7 +6,7 @@ import mate.academy.rickandmorty.model.CartoonCharacter;
 public interface CartoonCharacterService extends GenericService<CartoonCharacter> {
     CartoonCharacter getRandomCharacter();
 
-    List<CartoonCharacter> getByName(String name);
+    List<CartoonCharacter> getAll(String name);
 
     void saveAll(List<CartoonCharacter> characters);
 }
