@@ -7,4 +7,6 @@ public interface CartoonCharacterService extends GenericService<CartoonCharacter
     CartoonCharacter getRandomCharacter();
 
     List<CartoonCharacter> getByName(String name);
+
+    void saveAll(List<CartoonCharacter> characters);
 }

@@ -7,7 +7,7 @@ import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import mate.academy.rickandmorty.model.CartoonCharacter;
 import mate.academy.rickandmorty.repository.CartoonCharacterRepository;
-import mate.academy.rickandmorty.repository.character.CharacterNameSpecificationProvider;
+import mate.academy.rickandmorty.repository.SpecificationProvider;
 import mate.academy.rickandmorty.service.CartoonCharacterService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CartoonCharacterServiceImpl implements CartoonCharacterService {
     private final CartoonCharacterRepository characterRepository;
-    private final CharacterNameSpecificationProvider nameSpecificationProvider;
+    private final SpecificationProvider<CartoonCharacter> nameSpecificationProvider;
 
     @Override
     public CartoonCharacter getRandomCharacter() {
@@ -29,7 +29,8 @@ public class CartoonCharacterServiceImpl implements CartoonCharacterService {
 
     @Override
     public List<CartoonCharacter> getByName(String name) {
-        Specification<CartoonCharacter> specification = nameSpecificationProvider.getSpecification(name);
+        Specification<CartoonCharacter> specification =
+                nameSpecificationProvider.getSpecification(name);
 
         return characterRepository.findAll(specification);
     }
@@ -37,6 +38,11 @@ public class CartoonCharacterServiceImpl implements CartoonCharacterService {
     @Override
     public CartoonCharacter save(CartoonCharacter entity) {
         return characterRepository.save(entity);
+    }
+
+    @Override
+    public void saveAll(List<CartoonCharacter> characters) {
+        characterRepository.saveAll(characters);
     }
 
     @Override
