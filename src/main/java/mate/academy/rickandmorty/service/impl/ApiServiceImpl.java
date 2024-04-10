@@ -7,10 +7,12 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import mate.academy.rickandmorty.model.ApiResponse;
 import mate.academy.rickandmorty.service.ApiService;
 import mate.academy.rickandmorty.service.CartoonCharacterService;
+import mate.academy.rickandmorty.service.mapper.CharacterMapper;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ApiServiceImpl implements ApiService {
     private final CartoonCharacterService characterService;
+    private final CharacterMapper mapper;
     private final ObjectMapper objectMapper;
     private final Environment environment;
 
@@ -27,7 +30,12 @@ public class ApiServiceImpl implements ApiService {
         ApiResponse response = getApiResponse(currentUrl);
 
         while (currentUrl != null) {
-            characterService.saveAll(response.getResults());
+            characterService.saveAll(
+                    response.getResults()
+                            .stream()
+                            .map(mapper::toModel)
+                            .collect(Collectors.toList())
+            );
 
             currentUrl = response.getInfo().getNext();
             response = getApiResponse(currentUrl);
